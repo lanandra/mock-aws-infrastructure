@@ -23,3 +23,7 @@ For example:
 ## Terraform Configuration
 
 Terraform configuration in this repository is using Terraform Cloud as a backend
+
+## Example
+
+I created some blogpost which contain example of usage about codes in this repository. Please check examples directory and you will find link to blogpost
