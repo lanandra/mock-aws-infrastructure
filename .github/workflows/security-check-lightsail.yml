@@ -1,0 +1,23 @@
+name: security-check-lightsail
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - environment-name/lightsail/region-name/**.tf
+  workflow_dispatch:
+jobs:
+  sast-tftsec-lightsail:
+    name: sast-tftsec-lightsail
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@master
+      - name: tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          working_directory: ./environment-name/lightsail/region-name
+          additional_args: --concise-output
+          soft_fail: true
+          github_token: ${{ secrets.GHA_TOKEN }}
