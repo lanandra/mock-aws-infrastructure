@@ -4,10 +4,10 @@
 
 terraform {
   backend "s3" {
-    bucket         = "my-sandbox-tfbucket"
+    bucket         = "my-sandbox2-tfbucket"
     key            = "path/to/terraform.tfstate"
     region         = "ap-southeast-1"
-    dynamodb_table = "my-sandbox-tflocks"
+    dynamodb_table = "my-sandbox2-tflocks"
     encrypt        = true
   }
 }
