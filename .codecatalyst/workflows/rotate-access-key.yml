@@ -1,0 +1,55 @@
+Name: rotate-access-key
+SchemaVersion: "1.0"
+
+Triggers:
+  - Type: SCHEDULE
+    Expression: "30 12 ? * THU *"
+    Branches:
+      - master
+
+Actions:
+  delete-access-key:
+    Identifier: aws/build@v1
+    Inputs:
+      Sources:
+        - WorkflowSource
+      Variables:
+        - Name: IAM_USER
+          Value: "tf-admin"
+    Environment:
+      Name: sandbox
+      Connections:
+        - Name: lanandra-sandbox
+          Role: codecatalyst-admin
+    Configuration:
+      Steps:
+      - Run: cd sandbox2/iam
+      - Run: ./delete-access-key.sh
+    Compute:
+      Type: EC2
+  create-access-key:
+    DependsOn:
+      - delete-access-key
+    Identifier: aws/build@v1
+    Inputs:
+      Sources:
+        - WorkflowSource
+      Variables:
+        - Name: IAM_USER
+          Value: "tf-admin"
+    Outputs:
+      Artifacts:
+        - Name: ACCESSKEY
+          Files:
+            - sandbox2/iam/access-key.csv
+    Environment:
+      Name: sandbox
+      Connections:
+        - Name: lanandra-sandbox
+          Role: codecatalyst-admin
+    Configuration:
+      Steps:
+      - Run: cd sandbox2/iam
+      - Run: ./create-access-key.sh
+    Compute:
+      Type: EC2
