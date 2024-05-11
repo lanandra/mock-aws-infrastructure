@@ -1,0 +1,61 @@
+Name: tf-sandbox-sbx0-vpc
+SchemaVersion: "1.0"
+
+Triggers:
+  - Type: PUSH
+    Branches:
+      - master
+    FilesChanged:
+      - sandbox\/sbx0\/vpc\/.*
+
+Actions:
+  terraform-plan:
+    Identifier: aws/build@v1
+    Inputs:
+      Sources:
+        - WorkflowSource
+    Environment:
+      Name: sandbox
+      Connections:
+        - Name: lanandra-sandbox
+          Role: codecatalyst-admin
+    Configuration:
+      Container:
+        Registry: DockerHub
+        Image: hashicorp/terraform:1.8.2
+      Steps:
+      - Run: cd sandbox/sbx0/vpc
+      - Run: terraform fmt -check -no-color
+      - Run: terraform init -no-color
+      - Run: terraform validate -no-color
+      - Run: terraform plan -no-color -input=false
+    Compute:
+      Type: EC2
+  wait-for-approval:
+    Identifier: aws/approval@v1
+    DependsOn:
+      - terraform-plan
+    Configuration:
+      ApprovalsRequired: 1
+  terraform-apply:
+    DependsOn:
+      - wait-for-approval
+    Identifier: aws/build@v1
+    Inputs:
+      Sources:
+        - WorkflowSource
+    Environment:
+      Name: sandbox
+      Connections:
+        - Name: lanandra-sandbox
+          Role: codecatalyst-admin
+    Configuration:
+      Container:
+        Registry: DockerHub
+        Image: hashicorp/terraform:1.8.2
+      Steps:
+      - Run: cd sandbox/sbx0/vpc
+      - Run: terraform init -no-color
+      - Run: terraform apply -auto-approve -no-color -input=false
+    Compute:
+      Type: EC2
