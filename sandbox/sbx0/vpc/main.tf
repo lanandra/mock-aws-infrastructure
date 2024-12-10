@@ -1,8 +1,3 @@
-#######
-# VPC #
-#######
-
-
 data "aws_availability_zones" "available" {}
 
 locals {
@@ -13,6 +8,10 @@ locals {
     "managedBy"   = "terraform"
   }
 }
+
+#######
+# VPC #
+#######
 
 module "sbx0_apse1" {
   source  = "terraform-aws-modules/vpc/aws"
