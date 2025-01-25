@@ -1,0 +1,11 @@
+policies:
+  - name: check-tag
+    resource: "terraform.aws*"
+    metadata:
+      severity: low
+    filters:
+      - taggable
+      - or:
+        - type: value
+          key: "tag:lanandra:environment"
+          value: absent

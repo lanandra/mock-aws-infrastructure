@@ -9,8 +9,31 @@ Triggers:
       - sandbox\/sbx0\/ec2\/.*
 
 Actions:
+  tag-compliance:
+    Identifier: aws/build@v1
+    Inputs:
+      Sources:
+        - WorkflowSource
+    Environment:
+      Name: sandbox
+      Connections:
+        - Name: lanandra-sandbox
+          Role: tf-codecatalyst-admin-sandbox
+    Configuration:
+      Container:
+        Registry: DockerHub
+        Image: python:3.12.8-bookworm
+      Steps:
+      - Run: cd sandbox/sbx0/ec2
+      - Run: pip install c7n
+      - Run: pip install c7n-left
+      - Run: c7n-left run -p . -d .
+    Compute:
+      Type: EC2
   terraform-plan:
     Identifier: aws/build@v1
+    DependsOn:
+      - tag-compliance
     Inputs:
       Sources:
         - WorkflowSource

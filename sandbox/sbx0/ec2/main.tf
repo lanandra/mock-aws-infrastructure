@@ -13,12 +13,17 @@ locals {
 # EC2 #
 #######
 
+##################################
+# Terraform import example section
+##################################
+
 # after import has been finished, please remove this import block
 import {
   to = module.lab_import_tf.aws_instance.this[0]
   id = "i-083e2e6033b02ae8a" # change with id of your ec2 instance
 }
 
+# EC2 instance example for Terraform import
 module "lab_import_tf" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "5.6.1"
@@ -50,6 +55,82 @@ module "lab_import_tf" {
   ]
 
   tags = local.tags
+}
+
+################################
+# Tag compliance example section
+################################
+
+# EC2 instance with required tag
+module "lab_ec2_0" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "5.6.1"
+
+  name = "${var.env_name}-lab-0"
+
+  ami                         = data.aws_ami.ubuntu_22_04.id
+  instance_type               = "t3a.nano"
+  availability_zone           = element(local.azs, 0)
+  subnet_id                   = element(var.public_subnet_id, 0)
+  vpc_security_group_ids      = [module.lab_sg.security_group_id]
+  associate_public_ip_address = true
+  key_name                    = var.env_name
+  iam_instance_profile        = module.lab_instance_profile.iam_instance_profile_name
+
+  enable_volume_tags = false
+  root_block_device = [
+    {
+      encrypted   = true
+      volume_type = "gp3"
+      volume_size = 10
+      tags = merge(
+        local.tags,
+        {
+          Name = "${var.env_name}-lab-0"
+        }
+      )
+    }
+  ]
+
+  tags = merge(
+    local.tags,
+    {
+      Name = "${var.env_name}-lab-0"
+    }
+  )
+}
+
+# EC2 instance without required tag
+module "lab_ec2_1" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "5.6.1"
+
+  name = "${var.env_name}-lab-1"
+
+  ami                         = data.aws_ami.ubuntu_22_04.id
+  instance_type               = "t3a.nano"
+  availability_zone           = element(local.azs, 0)
+  subnet_id                   = element(var.public_subnet_id, 0)
+  vpc_security_group_ids      = [module.lab_sg.security_group_id]
+  associate_public_ip_address = true
+  key_name                    = var.env_name
+  iam_instance_profile        = module.lab_instance_profile.iam_instance_profile_name
+
+  enable_volume_tags = false
+  root_block_device = [
+    {
+      encrypted   = true
+      volume_type = "gp3"
+      volume_size = 10
+      tags = {
+        Name = "${var.env_name}-lab-1"
+      }
+    }
+  ]
+
+  tags = {
+    Name = "${var.env_name}-lab-1"
+  }
 }
 
 ##################
