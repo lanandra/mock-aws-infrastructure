@@ -27,7 +27,7 @@ Actions:
       - Run: cd sandbox/sbx0/ec2
       - Run: pip install c7n
       - Run: pip install c7n-left
-      - Run: c7n-left run -p . -d .
+      - Run: c7n-left run -p ../../../custodian/ -d . --filters="category=tag"
     Compute:
       Type: EC2
   terraform-plan:

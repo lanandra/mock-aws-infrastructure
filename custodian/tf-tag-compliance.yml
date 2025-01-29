@@ -2,6 +2,7 @@ policies:
   - name: check-tag
     resource: "terraform.aws*"
     metadata:
+      category: [tag]
       severity: low
     filters:
       - taggable
