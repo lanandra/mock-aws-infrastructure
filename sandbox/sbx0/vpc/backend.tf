@@ -4,11 +4,11 @@
 
 terraform {
   backend "s3" {
-    bucket         = "my-tfbucket"
-    key            = "path/to/terraform.tfstate"
-    region         = "ap-southeast-1"
-    dynamodb_table = "my-tflocks"
-    encrypt        = true
+    bucket       = "my-tfbucket"
+    key          = "path/to/terraform.tfstate"
+    region       = "ap-southeast-1"
+    encrypt      = true
+    use_lockfile = true
   }
 }
 
