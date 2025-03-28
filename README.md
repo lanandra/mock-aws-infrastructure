@@ -37,14 +37,14 @@ For example:
 
  ```
  terraform {
-   backend "s3" {
-     bucket         = "my-tfbucket"
-     key            = "path/to/terraform.tfstate"
-     region         = "ap-southeast-1"
-     dynamodb_table = "my-tflocks"
-     encrypt        = true
-   }
- }
- ```
+  backend "s3" {
+    bucket       = "my-tfbucket"
+    key          = "path/to/terraform.tfstate"
+    region       = "ap-southeast-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}
+```
 
 Terraform filenames more likely will follow Terraform configuration language style guide as referred to this [terraform style guide](https://developer.hashicorp.com/terraform/language/style). Although not really similar and have some adjustments in some of the files
