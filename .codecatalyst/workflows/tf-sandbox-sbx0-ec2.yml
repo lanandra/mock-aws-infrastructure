@@ -45,7 +45,7 @@ Actions:
     Configuration:
       Container:
         Registry: DockerHub
-        Image: hashicorp/terraform:1.8.2
+        Image: hashicorp/terraform:1.11.2
       Steps:
       - Run: cd sandbox/sbx0/ec2
       - Run: terraform fmt -check -no-color
@@ -75,7 +75,7 @@ Actions:
     Configuration:
       Container:
         Registry: DockerHub
-        Image: hashicorp/terraform:1.8.2
+        Image: hashicorp/terraform:1.11.2
       Steps:
       - Run: cd sandbox/sbx0/ec2
       - Run: terraform init -no-color
